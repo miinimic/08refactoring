@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ProductMapper">
+ 	
+ 	
+
+	<resultMap id="productSelectMap" type="product">
+		<result property="fileName" 			column="image_file" 			jdbcType="VARCHAR"/>
+		<result property="manuDate"	column="manufacture_day" 		jdbcType="VARCHAR" />
+		<result property="price" 	column="price" 		jdbcType="NUMERIC" />
+		<result property="prodDetail" 				column="prod_detail" 					jdbcType="VARCHAR" />
+		<result property="prodName" 				column="prod_name" 					jdbcType="VARCHAR" />
+		<result property="prodNo" 			column="prod_no" 		jdbcType="NUMERIC" />
+		<result property="regDate" 				column="reg_date" 					jdbcType="DATE" />
+		<result property="proTranCode" 				column="tran_status_code" 					jdbcType="CHAR" />
+		<result property="category" 		column="category" 			jdbcType="VARCHAR" />
+		<result property="item" 		column="item" 			jdbcType="NUMERIC" />
+		<result property="cartNo" 		column="cart_no" 			jdbcType="NUMERIC" />
+		<result property="tranNo" 		column="tran_no" 			jdbcType="NUMERIC" />
+		<result property="userId" 		column="user_id" 			jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<!-- SQL : INSERT -->
+	<insert 	id="insertProduct"		parameterType="product" >							
+		INSERT 
+		INTO product 
+		VALUES (seq_product_prod_no.nextval,#{prodName},#{prodDetail:VARCHAR},#{manuDate:VARCHAR},
+		        #{price:NUMERIC},#{fileName:VARCHAR},SYSDATE,#{category:VARCHAR},#{item:NUMERIC})
+	 </insert>
+	 
+	 <delete 	id="deleteProduct"		parameterType="int" >							
+		DELETE FROM product WHERE prod_no = #{prodNo:NUMERIC}
+	 </delete>
+	 
+	 <update 	id="updateProduct"	parameterType="product">
+		UPDATE product
+		<set>
+			prod_name = #{prodName},
+			prod_detail = #{prodDetail},
+			manufacture_day = #{manuDate},
+			price = #{price},
+			image_file = #{fileName},
+			category = #{category},
+			item = #{item}		
+		</set>  
+		WHERE prod_no = #{prodNo}
+	 </update>
+	 
+	 <select 	id="findProduct"		parameterType="int"   resultMap="productSelectMap">							
+		SELECT p.*, t.tran_status_code
+		FROM product p, transaction t
+		WHERE p.prod_no = t.prod_no(+) AND p.prod_no = #{prodNo:NUMERIC}
+	 </select> 
+	 
+	 <select 	id="getCartNo"		parameterType="int"   resultType="int">							
+		SELECT cart_no
+		FROM cart
+		WHERE prod_no = #{prodNo:NUMERIC}
+	 </select> 
+	 
+	 <select  id="getSaleList"  parameterType="search"	resultMap="productSelectMap">
+	 
+	 	SELECT p.*, t.TRAN_STATUS_CODE 
+	 	FROM PRODUCT p, TRANSACTION t 
+	 	WHERE p.PROD_NO=t.PROD_NO(+) and t.TRAN_STATUS_CODE is null
+	 	
+	 					<if test="searchCondition != null">																		
+							<if test="searchCondition == 0 and searchKeyword !='' ">
+								and p.PROD_NO = #{searchKeyword} order by p.REG_DATE DESC
+							</if>
+							<if test="searchCondition == 1 and searchKeyword !='' ">
+								and p.PROD_NAME = #{searchKeyword} ORDER BY reg_date DESC
+							</if>
+							<if test="searchCondition == 2 and searchKeyword !='' ">
+								and p.PRICE = #{searchKeyword} ORDER BY reg_date DESC
+							</if>
+						</if>
+						<if test="searchCondition == null">	
+							order by p.REG_DATE DESC
+						</if>
+							
+	 </select>
+
+	<!-- <select  id="getProductList"  parameterType="search"	resultMap="productSelectMap">
+	  	SELECT *
+	  	FROM (	SELECT inner_table.* , ROWNUM AS row_seq
+	  					FROM		(	SELECT *
+											FROM product
+											<if test="searchCondition != null">
+												<where>
+													<if test="searchCondition == 0 and searchKeyword !='' ">
+										 				prod_no = #{searchKeyword}
+													</if>
+													<if test="searchCondition == 1 and searchKeyword !='' ">
+										 				prod_name = #{searchKeyword}
+													</if>
+													<if test="searchCondition == 2 and searchKeyword !='' ">
+										 				price = #{searchKeyword}
+													</if>
+												</where>
+											</if>
+											ORDER BY reg_date DESC ) inner_table
+						WHERE ROWNUM &lt;= #{endRowNum} )
+		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum} 
+	 </select>  -->
+	 
+	
+	 <select  id="getProductList"  parameterType="search"	resultMap="productSelectMap">
+	 	<if test="menu != null and menu == 'manage'">
+	 			  	SELECT  * FROM (	
+	 			  		SELECT inner_table.* , ROWNUM AS row_seq
+	  						FROM		(
+	  										SELECT t.TRAN_NO, c.CART_NO, p.*,  t.TRAN_STATUS_CODE 
+									 		FROM PRODUCT p, TRANSACTION t , CART c 
+									 		WHERE p.PROD_NO = t.PROD_NO(+) AND c.PROD_NO(+)=p.PROD_NO
+																	<if test="searchCondition != null">
+																			
+																					<if test="searchCondition == 0 and searchKeyword !='' ">
+																		 				and p.PROD_NO = #{searchKeyword} ORDER BY reg_date DESC
+																					</if>
+																					<if test="searchCondition == 1 and searchKeyword !='' ">
+																		 				 and p.PROD_NAME = #{searchKeyword} ORDER BY reg_date DESC
+																					</if>
+																					<if test="searchCondition == 2 and searchKeyword !='' ">
+																		 				 and p.PRICE = #{searchKeyword} ORDER BY reg_date DESC
+																					</if>
+																			
+																	</if>	
+														
+																	<if test="order == 'asc' and category == null">
+																						ORDER BY price ASC
+																	</if>
+																	
+																	<if test="order == 'desc' and category == null">
+																						ORDER BY price DESC
+																	</if>
+																			
+																	<if test="category != null and order == null">
+																						AND p.category = #{category} ORDER BY reg_date DESC
+																	</if>
+																			
+																    <if test="category != null and order == 'asc'">
+																				AND p.category = #{category} ORDER BY price ASC
+																	</if>
+																	
+																	<if test="category != null and order == 'desc'">
+																				AND p.category = #{category} ORDER BY price DESC
+																	</if>
+																	
+	
+																				
+	 	</if>
+	 	<if test="(menu != null and menu != 'manage') or menu == null">
+	 		SELECT *
+	  		FROM (	SELECT inner_table.* , ROWNUM AS row_seq
+	  				FROM		(	SELECT c.CART_NO, p.* 
+							 		FROM PRODUCT p, CART c 
+							 		WHERE  c.PROD_NO(+)=p.PROD_NO	
+							 							<if test="searchCondition != null">
+																		
+																			<if test="searchCondition == 0 and searchKeyword !='' ">
+																 				and p.PROD_NO = #{searchKeyword} ORDER BY p.REG_DATE DESC
+																			</if>
+																			<if test="searchCondition == 1 and searchKeyword !='' ">
+																 				 and p.PROD_NAME = #{searchKeyword} order by p.REG_DATE DESC
+																			</if>
+																			<if test="searchCondition == 2 and searchKeyword !='' ">
+																 				 and p.PRICE = #{searchKeyword} order by p.REG_DATE DESC
+																			</if>
+																		
+														</if>	
+																
+																	<if test="order == 'asc' and category == null">
+																						ORDER BY price ASC
+																	</if>
+																	
+																	<if test="order == 'desc' and category == null">
+																						ORDER BY price DESC
+																	</if>
+																	
+																	<if test="category != null and order == null">
+																						AND p.category = #{category} ORDER BY reg_date DESC
+																	</if>
+																	
+																	<if test="category != null and order == 'asc'">
+																				AND p.category = #{category} ORDER BY price ASC
+																	</if>
+																	
+																	<if test="category != null and order == 'desc'">
+																				AND p.category = #{category} ORDER BY price DESC
+																	</if>
+														
+	 	</if>
+	 	) inner_table
+						WHERE ROWNUM &lt;= #{endRowNum} )
+		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
+		</select>
+	
+
+	 <insert 	id="insertCart"		parameterType="map" >							
+		INSERT 
+		INTO cart 
+		VALUES (seq_product_prod_no.nextval,#{prodNo:NUMERIC},#{userId:VARCHAR})
+	 </insert>
+
+	 <select  id="getTotalCount"  parameterType="search"	 resultType="int">
+	  	SELECT COUNT(*)
+	  	FROM(	SELECT *
+						FROM product
+						<if test="searchCondition != null">
+							<where>
+								<if test="searchCondition == 0 and searchKeyword !='' ">
+						 			prod_no = #{searchKeyword}
+								</if>
+								<if test="searchCondition == 1 and searchKeyword !='' ">
+						 			prod_name = #{searchKeyword}
+								</if>
+								<if test="searchCondition == 2 and searchKeyword !='' ">
+						 			price = #{searchKeyword}
+								</if>
+							</where>
+						</if> ) countTable						
+	 </select>
+	 
+	 <select  id="getTotalCountSale"  parameterType="search"	 resultType="int">
+	  	SELECT COUNT(*)
+	  	FROM(	SELECT p.*, t.TRAN_STATUS_CODE 
+	 			FROM PRODUCT p, TRANSACTION t 
+	 			WHERE p.PROD_NO=t.PROD_NO(+) and t.TRAN_STATUS_CODE is null
+						<if test="searchCondition != null">
+								<if test="searchCondition == 0 and searchKeyword !='' ">
+						 			AND p.prod_no = #{searchKeyword}
+								</if>
+								<if test="searchCondition == 1 and searchKeyword !='' ">
+						 			AND p.prod_name = #{searchKeyword}
+								</if>
+								<if test="searchCondition == 2 and searchKeyword !='' ">
+						 			AND p.price = #{searchKeyword}
+								</if>
+						</if> ) countTable						
+	 </select>
+	 
+	  
+</mapper>
