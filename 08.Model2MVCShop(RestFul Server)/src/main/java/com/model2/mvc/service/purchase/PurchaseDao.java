@@ -17,8 +17,8 @@ public interface PurchaseDao {
 
 	public void updatePurchase(Purchase purchase, int prodNo) throws Exception;
 	
-	public void updateTranCode(Purchase purchase) throws Exception;	
-
+	public void updateTranCode(int tranNo, String tranCode) throws Exception;	
+	
 	//장바구니 조회
 	public Map<String,Object> getCartList(Search search, String userId) throws Exception;
 	

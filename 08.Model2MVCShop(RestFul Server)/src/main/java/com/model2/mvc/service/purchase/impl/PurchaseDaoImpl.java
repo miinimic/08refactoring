@@ -64,11 +64,13 @@ public class PurchaseDaoImpl implements PurchaseDao{
 				
 				map.put("list", list);
 				
+				System.out.println("map : "+map);
+				
 			return map;
 		}
 		
 		public Map<String, Object> getPurchaseList(Search search,String buyerId ) throws Exception{
-			System.out.println("purchasedaoImpl로 들어온 : "+buyerId);
+
 			Map<String , Object>  map = new HashMap<String, Object>();
 			
 				map.put("search", search);
@@ -82,16 +84,21 @@ public class PurchaseDaoImpl implements PurchaseDao{
 					System.out.println("UserMapper에서 받은 user : "+list.get(i).getBuyer().getUserId());
 					list.get(i).setPurchaseProd((Product)sqlSession.selectOne("ProductMapper.findProduct", list.get(i).getPurchaseProd().getProdNo()));
 					System.out.println("productmapper에서 받은 product : "+list.get(i).getPurchaseProd().getProdNo());
+					list.get(i).setTranCode(list.get(i).getTranCode().trim());
 				}
 				
 				map.put("totalCount", sqlSession.selectOne("PurchaseMapper.getTotalCount", buyerId));
 		
 				map.put("list", list);
+				
+				System.out.println("dao"+map);
+				System.out.println("buyerid"+buyerId);
 
 			return map;
 		}
 		
 		public Map<String, Object> getReviewList(Search search) throws Exception{
+			
 			Map<String , Object>  map = new HashMap<String, Object>();
 				List<Purchase> list = sqlSession.selectList("PurchaseMapper.getReviewList", search); 
 				
@@ -111,11 +118,13 @@ public class PurchaseDaoImpl implements PurchaseDao{
 		
 		public Map<String , Object> findPurchase(int tranNo) throws Exception{
 			Map<String , Object>  map = new HashMap<String, Object>();
-			
-			Purchase purchase = sqlSession.selectOne("PurchaseMapper.findPurchase", tranNo);
-			
+
+			Purchase purchase = sqlSession.selectOne("PurchaseMapper.findPurchase", tranNo);		
 			User user = sqlSession.selectOne("UserMapper.getUser", purchase.getBuyer().getUserId());
 			Product product = sqlSession.selectOne("ProductMapper.findProduct", purchase.getPurchaseProd().getProdNo());
+			
+			purchase.setPaymentOption(purchase.getPaymentOption().trim());
+			purchase.setTranCode(purchase.getTranCode().trim());
 			
 			map.put("product", product);
 			map.put("user", user);
@@ -130,27 +139,42 @@ public class PurchaseDaoImpl implements PurchaseDao{
 			int tranItem = sqlSession.selectOne("PurchaseMapper.findPurchaseItem", purchase.getTranNo());	 
 
 			int item = (proItem + tranItem) - purchase.getItem();		
-			
+			System.out.println("purchase.getDivyDate : "+purchase.getDivyDate());
+
 			sqlSession.update("PurchaseMapper.updatePurchase", purchase);
 			
 			updateProductItem(item, prodNo);
 
 		}
 		
-		public void updateTranCode(Purchase purchase) throws Exception{
-			sqlSession.update("PurchaseMapper.updateTranCode", purchase);
+		public void updateTranCode(int tranNo, String tranCode) throws Exception{
+			Map<String , Object>  map = new HashMap<String, Object>();
+			
+			map.put("tranCode", tranCode);
+			map.put("tranNo", tranNo);
+
+			sqlSession.update("PurchaseMapper.updateTranCode", map);
+			
+			/*
+			  구매완료 -> 2
+				배송하기 -> 3
+				상품도착 -> 4
+				구매확정 -> 5
+				후기작성완료 -> 6
+			 */
+
 		}
 		
 		public int findCartCount(int ProdNo) throws Exception{
 			return sqlSession.selectOne("PurchaseMapper.findCartCount", ProdNo);
 		}
 		
-		public void deleteCart(int ProdNo) throws Exception{
-			sqlSession.delete("PurchaseMapper.deleteCart", ProdNo);
+		public void deleteReview(int tranNo) throws Exception{
+			sqlSession.update("PurchaseMapper.deleteReview", tranNo);			
 		}
 		
-		public void deleteReview(int tranNo) throws Exception{
-			sqlSession.update("PurchaseMapper.deleteReview", tranNo);
+		public void deleteCart(int prodNo) throws Exception{
+			sqlSession.update("PurchaseMapper.deleteCart", prodNo);
 		}
 		
 		public void addReview(int tranNo, String review) throws Exception{
@@ -184,8 +208,6 @@ public class PurchaseDaoImpl implements PurchaseDao{
 			sqlSession.update("PurchaseMapper.updateItem", map);
 				
 		}
-	
-		//public Map<String,Object> getReviewList(Search search, String userId) throws Exception;
 		
 		public void updateProductItem(int item, int prodNo) throws Exception{
 			

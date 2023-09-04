@@ -1,30 +1,81 @@
-<%@ page contentType="text/html; charset=euc-kr" %>
+<%@ page contentType="text/html; charset=EUC-KR" %>
+<%@ page pageEncoding="EUC-KR"%>
 
-<%@ page import="com.model2.mvc.service.domain.User" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<%
-	User vo=(User)session.getAttribute("user");
-	String role="";
-	
-	if(vo != null) {
-		role=vo.getRole();
-	}
-	
-%>
-
-
+<!DOCTYPE html>
 <html>
 <head>
 
-<title>Model2 MVC Shop</title>
+<title>Lunch Box</title>
 
 <link href="/css/left.css" rel="stylesheet" type="text/css">
 
-<script type="text/javascript">
-function history(){
+	<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+	<script type="text/javascript">
+/*function history(){
 	popWin = window.open("/history.jsp","popWin","left=300, top=200, width=300, height=200, marginwidth=0, marginheight=0, scrollbars=no, scrolling=no, menubar=no, resizable=no");
-}
+}*/
 
+//==> jQuery 적용 추가된 부분
+$(function() {
+	 
+	//==> 개인정보조회 Event 연결처리부분
+	//==> DOM Object GET 3가지 방법 ==> 1. $(tagName) : 2.(#id) : 3.$(.className)
+	$( ".Depth03:contains('개인정보조회')" ).on("click" , function() {
+		//Debug..
+		//alert(  $( ".Depth03:contains('개인정보조회')" ).html() );
+		$(window.parent.frames["rightFrame"].document.location).attr("href","/user/getUser?userId=${user.userId}");
+	});
+	
+	$( ".Depth03:contains('카테고리별 상품조회')" ).on("click" , function() {
+		//Debug..
+		//alert(  $( ".Depth03:contains('개인정보조회')" ).html() );
+		$(window.parent.frames["rightFrame"].document.location).attr("href","/product/listCategory.jsp");
+	});
+	
+	$( ".Depth03:contains('후기 목록 조회')" ).on("click" , function() {
+		//Debug..
+		//alert(  $( ".Depth03:contains('개인정보조회')" ).html() );
+		$(window.parent.frames["rightFrame"].document.location).attr("href","/listReview");
+	});
+	
+	//==> 회원정보조회 Event 연결처리부분
+	//==> DOM Object GET 3가지 방법 ==> 1. $(tagName) : 2.(#id) : 3.$(.className)
+	$( ".Depth03:contains('회원정보조회')" ).on("click" , function() {
+
+		$(window.parent.frames["rightFrame"].document.location).attr("href","/user/listUser");
+	}); 
+	
+	$( ".Depth03:contains('판매상품등록')" ).on("click" , function() {
+
+		$(window.parent.frames["rightFrame"].document.location).attr("href","../product/addProductView.jsp");
+	}); 
+	
+	$( ".Depth03:contains('판매상품관리')" ).on("click" , function() {
+
+		$(window.parent.frames["rightFrame"].document.location).attr("href","/product/listProduct?menu=manage"); 
+	}); 
+	$( ".Depth03:contains('상 품 검 색')" ).on("click" , function() { 
+
+		$(window.parent.frames["rightFrame"].document.location).attr("href","/product/listProduct?menu=search"); 
+	}); 
+	
+	$( ".Depth03:contains('주문 내역 조회')" ).on("click" , function() {
+
+		$(window.parent.frames["rightFrame"].document.location).attr("href","/purchase/listPurchase"); 
+	}); 
+	
+	$( ".Depth03:contains('장바구니')" ).on("click" , function() {
+
+		$(window.parent.frames["rightFrame"].document.location).attr("href","/product/listCart"); 
+	}); 
+	
+	$( ".Depth03:contains('최근 본 상품')" ).on("click" , function() {
+
+		popWin = window.open("/history.jsp","popWin","left=300, top=200, width=300, height=200, marginwidth=0, marginheight=0, scrollbars=no, scrolling=no, menubar=no, resizable=no");
+	}); 
+});	
 </script>
 </head>
 
@@ -36,36 +87,33 @@ function history(){
 <tr>
 <td valign="top"> 
 	<table  border="0" cellspacing="0" cellpadding="0" width="159" >	
-		<% 	if(vo != null){ %>
+		<tr>
+		<c:if test="${ !empty user }">
 		<tr>
 			<td class="Depth03">
-				<a href="/user/getUser?userId=<%=vo.getUserId() %>" target="rightFrame">개인정보조회</a>
+				개인정보조회
+			</td>
+		</tr>			
+		<tr>
+			<td class="Depth03">
+				카테고리별 상품조회
 			</td>
 		</tr>
 		<tr>
-				<td class="DepthEnd">&nbsp;</td>
-			</tr>
-			<tr>
-				<td class="Depth03">
-					<a href="/product/listCategory.jsp" target="rightFrame">카테고리별 상품조회</a>
-				</td>
-			</tr>
-					<tr>
-				<td class="DepthEnd">&nbsp;</td>
-			</tr>
-			<tr>
-				<td class="Depth03">
-					<a href="/listReview" target="rightFrame">후기 목록 조회</a>
-				</td>
-			</tr>
-		<%	}  %>
-		<% if(role.equals("admin")){%>
-		<tr>
-			<td class="Depth03" >
-				<a href="/user/listUser" target="rightFrame">회원정보조회</a>
+			<td class="Depth03">
+				후기 목록 조회
 			</td>
 		</tr>
-		<% } %>
+		</c:if>	
+		
+			
+		<c:if test="${user.role == 'admin'}">
+			<tr>
+				<td class="Depth03" >
+					회원정보조회
+				</td>
+			</tr>
+		</c:if>
 		<tr>
 			<td class="DepthEnd">&nbsp;</td>
 		</tr>
@@ -73,19 +121,19 @@ function history(){
 </td>
 </tr>
 
-<%	if(role.equals("admin")){ %>
+<c:if test="${user.role == 'admin'}">
 <!--menu 02 line-->
 <tr>
 	<td valign="top"> 
 		<table  border="0" cellspacing="0" cellpadding="0" width="159">
 			<tr>
 				<td class="Depth03">
-					<a href="../product/addProductView.jsp;" target="rightFrame">판매상품등록</a>
+					판매상품등록
 				</td>
 			</tr>
 			<tr>
 				<td class="Depth03">
-					<a href="/product/listProduct?menu=manage"  target="rightFrame">판매상품관리</a>
+					판매상품관리
 				</td>
 			</tr>
 			<tr>
@@ -94,32 +142,31 @@ function history(){
 		</table>
 	</td>
 </tr>
-<% } %>
+</c:if>
 
 <!--menu 03 line-->
 <tr>
 	<td valign="top"> 
 		<table  border="0" cellspacing="0" cellpadding="0" width="159">
-			<%	if(vo == null || vo!=null && role.equals("user")){%>
+			<c:if test="${ empty user || ! empty user && user.role == 'user'}">
 			<tr>
 				<td class="Depth03">
-					<a href="/product/listProduct?menu=search" target="rightFrame">상 품 검 색</a>
+					상 품 검 색
 				</td>
 			</tr>
-			<% } %>
-			<%	if(vo != null && role.equals("user")){%>
+			</c:if>
+			<c:if test="${ ! empty user && user.role == 'user'}">
 			<tr>
 				<td class="Depth03">
-					<a href="/product/listPurchase"  target="rightFrame">주문 내역 조회</a>
+					주문 내역 조회
 				</td>
-			</tr>
-			
+			</tr>	
 			<tr>
 				<td class="Depth03">
-					<a href="/product/listCart"  target="rightFrame">장바구니</a>
+					장바구니
 				</td>
 			</tr>
-			<%  }%>
+			</c:if>
 
 			
 			<tr>
@@ -127,7 +174,7 @@ function history(){
 			</tr>
 			<tr>
 				<td class="Depth03">
-					<a href="javascript:history()">최근 본 상품</a>
+					최근 본 상품
 				</td>
 			</tr>
 		</table>

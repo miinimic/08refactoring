@@ -56,5 +56,28 @@ public class ProductRestController {
 		//Business Logic
 		return productService.findProduct(prodNo);
 	}
+	
+	@RequestMapping( value="json/updateProduct/{prodNo}", method=RequestMethod.GET )
+	public Product updateProduct( @PathVariable int prodNo  ) throws Exception{
+
+		System.out.println("/json/updateProduct : GET");
+		//Business Logic
+		Product product = productService.findProduct(prodNo);
+
+		return product;
+	}
+	
+	@RequestMapping( value="json/updateProduct", method=RequestMethod.POST )
+	public Product updateProduct( @RequestBody Product product, HttpSession session) throws Exception{
+
+		System.out.println("/json/updateProduct : POST");
+		//Business Logic
+
+		productService.updateProduct(product);
+		Product result = productService.findProduct(product.getProdNo());
+		
+		//return "redirect:/product/getProduct?prodNo="+product.getProdNo()+"&menu=manage";
+		return result;
+	}
 
 }

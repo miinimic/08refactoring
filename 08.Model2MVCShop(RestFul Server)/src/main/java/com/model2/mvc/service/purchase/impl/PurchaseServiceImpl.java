@@ -49,26 +49,16 @@ public class PurchaseServiceImpl implements PurchaseService{
 	}
 	
 	public Map<String , Object > getPurchaseList(Search search, String buyerId) throws Exception {
-		System.out.println("purchaseserviceImpl 로 들어온 buyerId : "+buyerId);
-		Map<String , Object > list= purchaseDao.getPurchaseList(search, buyerId); 
-		int totalCount = purchaseDao.getTotalCount(buyerId);
 		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("list", list );
-		map.put("totalCount", new Integer(totalCount));
+		Map<String , Object > list= purchaseDao.getPurchaseList(search, buyerId); 		
 		
-		return map;
+		return list;
 	}
 	
 	public Map<String,Object> getCartList(Search search, String userId) throws Exception {
 		Map<String , Object > list= purchaseDao.getCartList(search, userId); 
-		int totalCount = purchaseDao.getTotalCountCart(userId);
 		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("list", list );
-		map.put("totalCount", new Integer(totalCount));
-		
-		return map;
+		return list;
 	}
 
 	public Map<String , Object> findPurchase(int tranNo) throws Exception {
@@ -85,10 +75,10 @@ public class PurchaseServiceImpl implements PurchaseService{
 
 	}
 	
-	public void updateTranCode(Purchase purchase) throws Exception {
-		purchaseDao.updateTranCode(purchase); 
+	public void updateTranCode(int tranNo, String tranCode) throws Exception {
+		purchaseDao.updateTranCode(tranNo, tranCode); 
 	}
-	
+
 	public int findPurchaseItem(int tranNo) throws Exception{
 		int purItem = purchaseDao.findPurchaseItem(tranNo); 
 		return purItem;
@@ -109,21 +99,12 @@ public class PurchaseServiceImpl implements PurchaseService{
 	}
 	
 	public Map<String,Object> getReviewList(Search search) throws Exception {
-		Map<String,Object> list= purchaseDao.getReviewList(search);
-		int totalCount = purchaseDao.getTotalCountReview();
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("list", list );
-		map.put("totalCount", new Integer(totalCount));
-		
-		return map;
+		Map<String,Object> list= purchaseDao.getReviewList(search);	
+		return list;
 	}
 	
 	public void updateReview(int tranNo, String review) throws Exception {
 		purchaseDao.updateReview(tranNo, review);
-	}
-	public void deleteCart(int prodNo) throws Exception {
-		purchaseDao.deleteCart(prodNo);
 	}
 	
 	public void addReview(int tranNo, String review) throws Exception {
@@ -132,6 +113,10 @@ public class PurchaseServiceImpl implements PurchaseService{
 	
 	public void deleteReview(int tranNo) throws Exception {
 		purchaseDao.deleteReview(tranNo);
+	}
+	
+	public void deleteCart(int prodNo) throws Exception {
+		purchaseDao.deleteCart(prodNo);
 	}
 
 }

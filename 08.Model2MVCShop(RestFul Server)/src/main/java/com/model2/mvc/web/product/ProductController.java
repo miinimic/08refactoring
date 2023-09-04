@@ -6,7 +6,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Cookie;
 
-import org.apache.commons.fileupload.FileUpload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,9 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.model2.mvc.common.Page;
 import com.model2.mvc.common.Search;
 import com.model2.mvc.service.domain.Product;
-import com.model2.mvc.service.domain.User;
 import com.model2.mvc.service.product.ProductService;
-import com.model2.mvc.service.product.impl.ProductServiceImpl;
 
 
 //==> 회원관리 Controller
@@ -51,16 +48,12 @@ public class ProductController {
 	int pageSize;
 	
 	
-	@RequestMapping("/addProduct")
+	//@RequestMapping("/addProduct")
+	@RequestMapping( value="addProduct", method=RequestMethod.POST)
 	public String addProduct(@ModelAttribute("product") Product product, HttpServletRequest request) throws Exception {
 
 		System.out.println("/addProduct");
 		
-	/*	if(FileUpload.isMultipartContent(request)) {
-			String temDir = "C:\\workspace\\07refactoring\\src\\main\\webapp\\images\\uploadFiles\\";
-			
-			DiskFileUpload fileUpload = new Disk
-		} */
 		productService.insertProduct(product);
 		
 		return "forward:/product/addProduct.jsp";
@@ -75,6 +68,7 @@ public class ProductController {
 		return "redirect:/product/listProduct?menu=search";
 	}
 	
+	//@RequestMapping("/getProduct")
 	@RequestMapping( value="getProduct", method=RequestMethod.GET )
 	public String getProduct(@ModelAttribute("search") Search search, @RequestParam("prodNo") int prodNo , Model model ) throws Exception {
 		
@@ -88,7 +82,8 @@ public class ProductController {
 		return "forward:/product/getProduct.jsp";
 	}
 	
-	@RequestMapping("/updateProductView")
+	//@RequestMapping("/updateProductView")
+	@RequestMapping( value="updateProductView", method=RequestMethod.GET )
 	public String updateProductView( @RequestParam("prodNo") int prodNo , Model model ) throws Exception{
 
 		System.out.println("/updateProductView");
@@ -100,7 +95,8 @@ public class ProductController {
 		return "forward:/product/updateProductView.jsp";
 	}
 	
-	@RequestMapping("/updateProduct")
+	//@RequestMapping("/updateProduct")
+	@RequestMapping( value="updateProduct", method=RequestMethod.POST )
 	public String updateProduct( @ModelAttribute("product") Product product , Model model , HttpSession session) throws Exception{
 
 		System.out.println("/updateProduct");
@@ -164,7 +160,7 @@ public class ProductController {
 		
 		productService.deleteCart(prodNo); 
 
-		return "redirect:/product/listCart?currentPage="+search.getCurrentPage();
+		return "redirect:/purchase/listCart?currentPage="+search.getCurrentPage();
 	
 	}
 	

@@ -16,7 +16,7 @@ public interface PurchaseService {
 	
 	public void updatePurchase(Purchase purchase, int prodNo) throws Exception;
 	
-	public void updateTranCode(Purchase purchase) throws Exception;
+	public void updateTranCode( int tranNo, String tranCode) throws Exception;
 	
 	public Map<String, Object> getCartList(Search search, String userId) throws Exception;
 	
@@ -29,14 +29,14 @@ public interface PurchaseService {
 	public int findCartCount(int ProdNo) throws Exception;
 	
 	public Map<String, Object> getReviewList(Search search) throws Exception;
-
-	public void deleteCart(int prodNo) throws Exception;
 	
 	public void addReview(int tranNo, String review) throws Exception;
 	
 	public void updateReview(int tranNo, String review) throws Exception;
 	
 	public void deleteReview(int tranNo) throws Exception;
+	
+	public void deleteCart(int prodNo) throws Exception;
 	
 	public void updateItem(int ProdNo, int Proitem, int purItem) throws Exception;
 
