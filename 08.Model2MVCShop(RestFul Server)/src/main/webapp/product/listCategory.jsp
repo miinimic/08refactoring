@@ -52,23 +52,23 @@
 				<tr>
 				<td colspan="11" bgcolor="808285" height="1"></td>	
 				</tr>
-				<tr><td><a href="/listProduct.do?category=beef">beef</a> </td></tr>
+				<tr><td><a href="/listProduct?category=beef">beef</a> </td></tr>
 				<tr>
 				<td colspan="11" bgcolor="808285" height="1"></td>	
 				</tr>
-				<tr><td><a href="/listProduct.do?category=pork">pork</a> </td></tr>
+				<tr><td><a href="/listProduct?category=pork">pork</a> </td></tr>
 				<tr>
 				<td colspan="11" bgcolor="808285" height="1"></td>	
 				</tr>
-				<tr><td><a href="/listProduct.do?category=egg">egg</a> </td></tr>
+				<tr><td><a href="/listProduct?category=egg">egg</a> </td></tr>
 				<tr>
 				<td colspan="11" bgcolor="808285" height="1"></td>	
 				</tr>
-				<tr><td><a href="/listProduct.do?category=seafood">seafood</a> </td></tr>
+				<tr><td><a href="/listProduct?category=seafood">seafood</a> </td></tr>
 				<tr>
 				<td colspan="11" bgcolor="808285" height="1"></td>	
 				</tr>
-				<tr><td><a href="/listProduct.do?category=vegan">vegan</a> </td></tr>
+				<tr><td><a href="/listProduct?category=vegan">vegan</a> </td></tr>
 		</tr>
 
 </table>
