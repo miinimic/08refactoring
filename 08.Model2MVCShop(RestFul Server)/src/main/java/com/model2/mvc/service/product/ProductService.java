@@ -24,6 +24,6 @@ public interface ProductService {
 	
 	public void deleteProduct(int prodNo) throws Exception;
 	
-	public void deleteCart(int prodNo) throws Exception;
+	public void deleteCart(int prodNo, String userId) throws Exception;
 	
 }

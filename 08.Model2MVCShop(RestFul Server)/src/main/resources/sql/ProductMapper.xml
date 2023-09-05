@@ -36,6 +36,10 @@
 		DELETE FROM product WHERE prod_no = #{prodNo:NUMERIC}
 	 </delete>
 	 
+	 <delete 	id="deleteCart"		parameterType="map" >							
+		DELETE FROM cart WHERE prod_no = #{prodNo:NUMERIC} and user_id = #{userId:VARCHAR}
+	 </delete>
+	 
 	 <update 	id="updateProduct"	parameterType="product">
 		UPDATE product
 		<set>

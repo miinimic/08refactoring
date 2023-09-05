@@ -80,8 +80,14 @@ public class ProductDaoImpl implements ProductDao{
 			sqlSession.delete("ProductMapper.deleteProduct", prodNo);
 		}
 		
-		public void deleteCart(int prodNo) throws Exception{
-			sqlSession.delete("ProductMapper.deleteCart", prodNo);
+		public void deleteCart(int prodNo, String userId) throws Exception{
+			Map<String , Object>  map = new HashMap<String, Object>();
+			
+			map.put("prodNo", prodNo);
+			map.put("userId", userId);
+		
+			System.out.println(map);
+			sqlSession.delete("ProductMapper.deleteCart", map);
 		}
 		
 		public void addCart(int prodNo, String userId) throws Exception{

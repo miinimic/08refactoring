@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.model2.mvc.common.Page;
 import com.model2.mvc.common.Search;
 import com.model2.mvc.service.domain.Product;
+import com.model2.mvc.service.domain.Purchase;
 import com.model2.mvc.service.domain.User;
 import com.model2.mvc.service.product.ProductService;
 
@@ -55,6 +56,43 @@ public class ProductRestController {
 		
 		//Business Logic
 		return productService.findProduct(prodNo);
+	}
+	
+	@RequestMapping( value="json/addCart", method=RequestMethod.POST )
+	public int addCart(@RequestBody Purchase purchase) throws Exception {
+
+		System.out.println("/json/addCart");
+		
+		int prodNo = purchase.getPurchaseProd().getProdNo();
+		String userId = purchase.getBuyer().getUserId();
+		
+		System.out.println(prodNo+": prodNo");
+		System.out.println(userId+" : userId");
+		
+		productService.addCart(prodNo, userId);
+	
+		return productService.getCartNo(prodNo);
+	}
+	
+	@RequestMapping("json/deleteCart")
+	public String deleteCart( @RequestBody Purchase purchase, HttpSession session) throws Exception{
+	//	public String deleteCart( @PathVariable int prodNo, @RequestBody Search search, Model model , HttpSession session) throws Exception{
+		System.out.println("json/deleteCart");
+		//Business Logic
+		
+		/*if(search.getCurrentPage() ==0 ){
+			search.setCurrentPage(1);
+		} */
+		int prodNo = purchase.getPurchaseProd().getProdNo();
+		String userId = purchase.getBuyer().getUserId();
+		
+		System.out.println("prodNo : "+prodNo);
+		System.out.println("userId : "+userId);
+		
+		productService.deleteCart(prodNo, userId);
+
+		return "삭제 완료";
+	
 	}
 	
 	@RequestMapping( value="json/updateProduct/{prodNo}", method=RequestMethod.GET )
