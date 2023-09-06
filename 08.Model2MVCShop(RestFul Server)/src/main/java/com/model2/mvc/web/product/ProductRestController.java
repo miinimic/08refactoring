@@ -39,7 +39,7 @@ public class ProductRestController {
 		System.out.println(this.getClass());
 	}
 	
-	@RequestMapping("json/addProduct")
+	@RequestMapping(value="json/addProduct", method=RequestMethod.POST)
 	public Product addProduct(@RequestBody Product product, HttpServletRequest request) throws Exception {
 
 		System.out.println("json/addProduct");
@@ -47,6 +47,23 @@ public class ProductRestController {
 		productService.insertProduct(product);
 				
 		return product;
+	}
+	
+	@RequestMapping("json/deleteProduct")
+	//public String deleteProduct(@RequestBody Product product , @RequestBody Search search, HttpSession session) throws Exception{
+	public String deleteProduct(@RequestBody Product product , HttpSession session) throws Exception{
+		System.out.println("/json/deleteProduct");
+		//Business Logic
+		
+		int prodNo = product.getProdNo();
+		
+		/*if(search.getCurrentPage() ==0 ){
+			search.setCurrentPage(1);
+		}*/ 
+		
+		productService.deleteProduct(prodNo);
+
+		return "삭제 완료";
 	}
 	
 	@RequestMapping("json/getProduct/{prodNo}")
