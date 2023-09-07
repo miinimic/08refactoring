@@ -35,6 +35,14 @@ public class PurchaseRestController {
 	@Autowired
 	@Qualifier("purchaseServiceImpl")
 	private PurchaseService purchaseService;
+	
+	@Autowired
+	@Qualifier("productServiceImpl")
+	private ProductService productService;
+	
+	@Autowired
+	@Qualifier("userServiceImpl")
+	private UserService userService;
 	//setter Method 구현 않음
 		
 	public PurchaseRestController(){
@@ -61,6 +69,24 @@ public class PurchaseRestController {
 
 		purchaseService.insertPurchase(purchase);
 					
+		return purchase;
+	}
+	@RequestMapping( value="json/addPurchaseView/{prodNo}/{userId}", method=RequestMethod.GET )
+	public Purchase addPurchaseView(@PathVariable int prodNo, @PathVariable String userId) throws Exception {
+
+		System.out.println("json/addPurchaseView");
+		
+		System.out.println("prodno : "+prodNo+"  userId : "+userId);
+		
+		Product product = productService.findProduct(prodNo);
+		User user = userService.getUser(userId);
+		
+		Purchase purchase = new Purchase();
+		purchase.setBuyer(user);
+		purchase.setPurchaseProd(product);
+		
+		System.out.println("purchase : "+purchase);
+
 		return purchase;
 	}
 
