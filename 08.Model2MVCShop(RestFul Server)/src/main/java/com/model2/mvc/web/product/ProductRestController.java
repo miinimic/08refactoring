@@ -39,6 +39,27 @@ public class ProductRestController {
 		System.out.println(this.getClass());
 	}
 	
+	@RequestMapping("json/listProduct")
+	public Map<String , Object> listProduct( @RequestBody Search search  , HttpServletRequest request) throws Exception{
+		
+		System.out.println("/json/listProduct");
+		
+		if(search.getCurrentPage() ==0 ){
+			search.setCurrentPage(1);
+		} 
+
+		search.setPageSize(8);
+		
+		
+		// Business logic ผ๖วเ
+		Map<String , Object> map=productService.getProductList(search);	
+
+		Page resultPage = new Page( search.getCurrentPage(), ((Integer)map.get("totalCount")).intValue(), 5, 8);
+		System.out.println(resultPage);
+		
+		return map;
+	}
+	
 	@RequestMapping(value="json/addProduct", method=RequestMethod.POST)
 	public Product addProduct(@RequestBody Product product, HttpServletRequest request) throws Exception {
 

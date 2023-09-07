@@ -1,2 +1,4 @@
+/config/
+/log4j.properties
 /com/
 /sql/

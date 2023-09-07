@@ -49,6 +49,27 @@ public class PurchaseRestController {
 		System.out.println(this.getClass());
 	}
 	
+	@RequestMapping("json/listReview")
+	public Map<String,Object> listReview( @RequestBody Search search , HttpServletRequest request) throws Exception{ 
+		
+		System.out.println("/json/listReview");
+		
+		if(search.getCurrentPage() ==0 ){
+			search.setCurrentPage(1);
+		} 
+		
+		search.setPageSize(8);
+		
+		// Business logic ผ๖วเ
+		Map<String,Object> map=purchaseService.getReviewList(search);
+		
+		Page resultPage = new Page( search.getCurrentPage(), ((Integer)map.get("totalCount")).intValue(), 5, 8);
+		System.out.println(resultPage);
+
+		return map;
+	
+	}
+	
 	@RequestMapping( value="json/getPurchase/{tranNo}", method=RequestMethod.GET )
 	public Map<String , Object> getPurchase( @PathVariable int tranNo ) throws Exception {
 		

@@ -18,7 +18,7 @@
   		<result property="tranCode" 			column="TRAN_STATUS_CODE" 	jdbcType="CHAR"/>
   		<result property="orderDate" 			column="ORDER_DATA" 		jdbcType="DATE"/>  		 
   		<result property="divyDate" 			column="DLVY_DATE"			jdbcType="VARCHAR"/>
-  		<result property="reviewCode" 			column="review_code"		jdbcType="NUMERIC"/>
+  		<result property="reviewCode" 			column="review_code"		jdbcType="VARCHAR"/>
   		<result property="review" 				column="review"				jdbcType="VARCHAR"/>
   		<result property="item" 				column="item"				jdbcType="NUMERIC"/>
   	</resultMap>
@@ -28,8 +28,7 @@
   		<result property="prodNo" 	column="PROD_NO" 			jdbcType="NUMERIC"/>
   		<result property="userId" 		column="USER_ID"			jdbcType="VARCHAR"/>
   	</resultMap>
-  	
-
+ 
   	
 	<insert id="insertPurchase" parameterType="purchase">
 		INSERT 
@@ -52,7 +51,7 @@
 	</insert>
 	
 	<update id="addReview" parameterType="map">
-		UPDATE transaction SET review = #{review}, review_code = 6 WHERE tran_no =  #{tranNo}
+		UPDATE transaction SET review = #{review:VARCHAR} WHERE tran_no =  #{tranNo:NUMERIC}
 	</update>
 	
 	<select id="getPurchaseList" parameterType="map" resultMap="purchaseSelectMap">
@@ -79,7 +78,7 @@
 	</select>
 	
 	<select id="getReviewList" parameterType="search" resultMap="purchaseSelectMap">
-  		SELECT * FROM transaction WHERE review_code = 6
+  		SELECT * FROM transaction WHERE TRAN_STATUS_CODE = 6
 	</select>
 
 	 <select id="findPurchase" parameterType="int" resultMap="purchaseSelectMap">
@@ -127,11 +126,7 @@
 	 </update>
 	 
 	  <update 	id="updateReview"	parameterType="map">
-		UPDATE transaction
-		<set>
-			review = #{review}	
-		</set>  
-		WHERE TRAN_NO = #{tranNo}
+		UPDATE transaction SET review = #{review} WHERE TRAN_NO = #{tranNo}	
 	 </update>
 	 
 	 <update 	id="updateProductItem"	parameterType="map">
@@ -146,30 +141,14 @@
 		UPDATE product SET item = #{item:NUMERIC} WHERE prod_no = #{prodNo:NUMERIC}
 	 </update>
 	 
-	 <update 	id="updateTranCode"	parameterType="purchase">
+	 <update 	id="updateTranCode"	parameterType="map">
 		UPDATE transaction
-		<if test="tranCode == 5">
-			<set>
-				review_code = #{reviewCode}		
-			</set>
-		</if>
-		<if test="tranCode != 5">
-			<set>
-				TRAN_STATUS_CODE = #{tranCode}		
-			</set>
-		</if> 
-		WHERE TRAN_NO = #{tranNo:NUMERIC}
-	 </update>
-	 
-	  <delete  id="deleteCart"  parameterType="int"	>
-	  	DELETE
-	  	FROM
-		cart
-		WHERE prod_no = #{prodNo:NUMERIC}				
-	 </delete>
+		SET TRAN_STATUS_CODE = #{tranCode:VARCHAR} 
+		WHERE TRAN_NO = #{tranNo:NUMERIC}		
+	</update>	 
 	 
 	 <update  id="deleteReview"  parameterType="int"	>
-	  	UPDATE transaction SET review = NULL, review_code = NULL WHERE tran_no =  #{tranNo}		
+	  	UPDATE transaction SET review = NULL WHERE tran_no =  #{tranNo}		
 	 </update>
   	
   	<select  id="getTotalCount"  parameterType="string"	 resultType="int">
@@ -179,6 +158,13 @@
 						WHERE buyer_id = #{buyerId}
 			 ) countTable						
 	 </select>
+	 
+	 <delete  id="deleteCart"  parameterType="int"	>
+	  	DELETE
+	  	FROM
+		cart
+		WHERE prod_no = #{prodNo:NUMERIC}				
+	 </delete>
 	 
   	<select  id="getTotalCountCart"  parameterType="string"	 resultType="int">
 	  	SELECT COUNT(*)
@@ -190,7 +176,7 @@
 	 
 	 <select  id="getTotalCountReview" resultType="int">
 	  	SELECT COUNT(*)
-	  	FROM(	select * from TRANSACTION where review_code = 6
+	  	FROM(	select * from TRANSACTION where TRAN_STATUS_CODE = 6
 			) countTable						
 	 </select>
 
