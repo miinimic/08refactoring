@@ -68,7 +68,7 @@ $(function() {
 	
 	$( ".Depth03:contains('장바구니')" ).on("click" , function() {
 
-		$(window.parent.frames["rightFrame"].document.location).attr("href","/product/listCart"); 
+		$(window.parent.frames["rightFrame"].document.location).attr("href","/purchase/listCart"); 
 	}); 
 	
 	$( ".Depth03:contains('최근 본 상품')" ).on("click" , function() {

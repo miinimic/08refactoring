@@ -42,7 +42,7 @@ public class PurchaseDaoImpl implements PurchaseDao{
 			
 		}
 		
-		public Map<String, Object> getCartList(Search search,String userId ) throws Exception{
+		public Map<String, Object> getCartList(Search search, String userId ) throws Exception{
 			System.out.println("purchasedaoImpl로 들어온 : "+userId);
 			Map<String , Object>  map = new HashMap<String, Object>();
 			Product product = new Product();

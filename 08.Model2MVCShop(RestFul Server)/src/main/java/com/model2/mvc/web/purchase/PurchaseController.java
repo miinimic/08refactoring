@@ -173,21 +173,6 @@ public class PurchaseController {
 		
 	}
 	
-	@RequestMapping("/deleteCart")
-	public String deleteCart( @RequestParam("prodNo") int prodNo , @ModelAttribute("search") Search search, Model model , HttpSession session) throws Exception{
-
-		System.out.println("/deleteCart");
-		//Business Logic
-		
-		if(search.getCurrentPage() ==0 ){
-			search.setCurrentPage(1);
-		} 
-		
-		purchaseService.deleteCart(prodNo);
-
-		return "redirect:/purchase/listCart?currentPage="+search.getCurrentPage();
-	
-	}
 	
 	@RequestMapping("/deleteReview")
 	public String deleteReview( @RequestParam("tranNo") int tranNo , @ModelAttribute("search") Search search, Model model) throws Exception{

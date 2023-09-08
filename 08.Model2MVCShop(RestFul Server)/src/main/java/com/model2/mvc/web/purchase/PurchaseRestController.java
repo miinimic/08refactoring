@@ -69,7 +69,89 @@ public class PurchaseRestController {
 		return map;
 	
 	}
+	@RequestMapping("json/listPurchase")
+	public Map<String , Object> listPurchase( @RequestBody Search search ,  @PathVariable String userId, HttpServletRequest request) throws Exception{
+		
+		System.out.println("/json/listPurchase");
+		
+		/*HttpSession session=request.getSession();
+		User user = (User)session.getAttribute("user");
+		String buyerId = user.getUserId();	*/
+		
+		if(search.getCurrentPage() ==0 ){
+			search.setCurrentPage(1);
+		} 
+		String buyerId = userId;
+
+		search.setPageSize(8);
+		
+		// Business logic 수행
+		Map<String , Object> map=purchaseService.getPurchaseList(search, buyerId);	
+		
+		Page resultPage = new Page( search.getCurrentPage(), ((Integer)map.get("totalCount")).intValue(), 5, 8);
+		System.out.println(resultPage);
 	
+		return map;
+		
+	}
+	@RequestMapping( value="json/addReviewView/{tranCode}/{prodNo}/{tranNo}", method=RequestMethod.GET )
+	public Map<String, Object> addReviewView( @PathVariable String tranCode,  @PathVariable int prodNo,  @PathVariable int tranNo) throws Exception {
+
+		
+		System.out.println("json/addReviewView");
+		System.out.println("tranCode"+tranCode+"prodNo"+prodNo+"tranNo"+tranNo);		
+		
+		Map<String, Object> purchase=purchaseService.findPurchase(tranNo);
+		Product product = productService.findProduct(prodNo);
+		
+		return purchase;
+
+	}
+	
+	@RequestMapping( value="json/addReview/{tranNo}/{review}", method=RequestMethod.POST)
+	public Map<String, Object> addReview(@PathVariable int tranNo, @PathVariable String review) throws Exception {
+
+		System.out.println(tranNo + " : tranNo");
+		
+	/*	String review = request.getParameter("review");*/
+		//String review = "후기!";
+		
+		purchaseService.addReview(tranNo, review);
+		
+		String tranCode = "6";
+		purchaseService.updateTranCode(tranNo, tranCode);
+		
+		Map<String, Object> result=purchaseService.findPurchase(tranNo);
+		
+		return result;
+		
+	}
+	
+	@RequestMapping("json/listCart")
+	public Map<String , Object> listCart( @RequestBody Search search , HttpServletRequest request) throws Exception{
+		
+		/*HttpSession session=request.getSession();
+		User user=(User)session.getAttribute("user");
+		
+		String userId = user.getUserId();*/
+		String userId="user01";
+		System.out.println("json/listCart");
+		
+		if(search.getCurrentPage() ==0 ){
+			search.setCurrentPage(1);
+		} 
+		
+		search.setPageSize(8);
+		
+		// Business logic 수행
+		Map<String , Object> map=purchaseService.getCartList(search, userId);	
+		
+		Page resultPage = new Page( search.getCurrentPage(), ((Integer)map.get("totalCount")).intValue(), 5, 8);
+		System.out.println(resultPage);
+
+		return map;
+	
+	}
 	@RequestMapping( value="json/getPurchase/{tranNo}", method=RequestMethod.GET )
 	public Map<String , Object> getPurchase( @PathVariable int tranNo ) throws Exception {
 		

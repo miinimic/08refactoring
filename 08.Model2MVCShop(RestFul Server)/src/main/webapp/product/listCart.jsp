@@ -22,7 +22,7 @@ function fncGetCartList(currentPage) {
 
 <div style="width:98%; margin-left:10px;">
 
-<form name="detailForm" action="/listCart.do" method="post">
+<form name="detailForm" action="/listCart" method="post">
 <table width="100%" height="37" border="0" cellpadding="0"	cellspacing="0">
 	<tr>
 		<td width="15" height="37">
@@ -67,22 +67,22 @@ function fncGetCartList(currentPage) {
 	</tr>
 
 	<c:set var="i" value="0" />
-	<c:forEach var="purchase" items="${list}">
+	<c:forEach var="cart" items="${list}">
 		<c:set var="i" value="${ i+1 }" />
 		<tr class="ct_list_pop">
 		<td align="center">${ i }</td>
 		<td></td>
 		<td align="left">
-		<a href="/getProduct.do?prodNo=${purchase.getPurchaseProd().getProdNo()}&menu=cart">${purchase.getPurchaseProd().getProdName()}</a>
+		<a href="/product/getProduct?prodNo=${cart.getCartProd().getProdNo()}&menu=cart">${cart.getCartProd().getProdName()}</a>
 		</td>
 		<td></td>
-		<td align="left">${purchase.getPurchaseProd().getCategory() }</td> 
+		<td align="left">${cart.getCartProd().getCategory() }</td> 
 		<td></td>
-		<td align="left">${purchase.getPurchaseProd().getPrice() } ( 재고 : ${purchase.getPurchaseProd().getItem()} 개)</td> 
+		<td align="left">${cart.getCartProd().getPrice()} 원 ( 재고 : ${cart.getCartProd().getItem()} 개)</td> 
 		<td></td>
-		<td align="left">${purchase.getPurchaseProd().getRegDate() }</td>
+		<td align="left">${cart.getCartProd().getRegDate() }</td>
 		<td></td>	
-		<td align="left"><button><a href="/deleteCart.do?prodNo=${purchase.getPurchaseProd().getProdNo()}">삭제하기</a></button></td>
+		<td align="left"><button><a href="/product/deleteCart?prodNo=${cart.getCartProd().getProdNo()}">삭제하기</a></button></td>
 		<td></td>		
 	</tr>	
 	<tr>
