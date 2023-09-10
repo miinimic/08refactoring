@@ -174,6 +174,36 @@ public class PurchaseRestController {
 					
 		return purchase;
 	}
+	
+	@RequestMapping( value="json/updateReviewView/{tranNo}", method=RequestMethod.GET )
+	public Map<String , Object> updateReviewView( @PathVariable int tranNo ) throws Exception{
+
+		System.out.println("json/updateReviewView");
+		//Business Logic
+		Map<String , Object> purchase = purchaseService.findPurchase(tranNo);
+		// Model 과 View 연결
+	
+		return purchase;
+	}
+	
+	@RequestMapping("json/deleteReview/{tranNo}")
+	public String deleteReview( @PathVariable int tranNo , @RequestBody Search search) throws Exception{
+
+		System.out.println("json/deleteReview");
+		//Business Logic
+		
+		if(search.getCurrentPage() ==0 ){
+			search.setCurrentPage(1);
+		} 
+		
+		purchaseService.deleteReview(tranNo);
+		
+		String tranCode = "5";
+		purchaseService.updateTranCode(tranNo, tranCode);
+
+		return "삭제완료";
+	
+	}
 	@RequestMapping( value="json/addPurchaseView/{prodNo}/{userId}", method=RequestMethod.GET )
 	public Purchase addPurchaseView(@PathVariable int prodNo, @PathVariable String userId) throws Exception {
 
