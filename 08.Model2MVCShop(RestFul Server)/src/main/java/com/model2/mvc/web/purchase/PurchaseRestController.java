@@ -108,13 +108,16 @@ public class PurchaseRestController {
 
 	}
 	
-	@RequestMapping( value="json/addReview/{tranNo}/{review}", method=RequestMethod.POST)
+	@RequestMapping( value="json/addReview/{tranNo}/{review}", method=RequestMethod.GET)
 	public Map<String, Object> addReview(@PathVariable int tranNo, @PathVariable String review) throws Exception {
 
 		System.out.println(tranNo + " : tranNo");
 		
+		System.out.println("json/addReview");
+		
 	/*	String review = request.getParameter("review");*/
 		//String review = "후기!";
+		System.out.println("review : "+review);
 		
 		purchaseService.addReview(tranNo, review);
 		
@@ -221,6 +224,31 @@ public class PurchaseRestController {
 		System.out.println("purchase : "+purchase);
 
 		return purchase;
+	}
+
+	@RequestMapping("json/updateTranCode/{tranNo}/{tranCode}")
+	//public String updateTranCode( @RequestBody Search search, @PathVariable int tranNo, @PathVariable String tranCode) throws Exception{
+	public String updateTranCode( @PathVariable int tranNo, @PathVariable String tranCode) throws Exception{
+		System.out.println("json/updateTranCode");
+		//Business Logic
+
+		System.out.println("tranCode : "+tranCode);
+		System.out.println("tranNo : "+tranNo);
+		
+		Search search = new Search();
+		
+		if(search.getCurrentPage() ==0 ){
+			search.setCurrentPage(1);
+		} 
+
+		purchaseService.updateTranCode(tranNo, tranCode);
+
+		/*	if( search.getMenu().equals("manage")) {
+				return "forward:/product/listProduct?page="+search.getCurrentPage();
+			} else {
+				return "forward:/purchase/listPurchase?page="+search.getCurrentPage();
+			}*/
+		return "update 완료";
 	}
 
 	}
