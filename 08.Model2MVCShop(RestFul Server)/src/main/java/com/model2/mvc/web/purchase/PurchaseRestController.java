@@ -69,6 +69,36 @@ public class PurchaseRestController {
 		return map;
 	
 	}
+	
+	@RequestMapping( value="json/updatePurchaseView/{tranNo}", method=RequestMethod.GET )
+	public Map<String , Object> updatePurchaseView( @PathVariable int tranNo ) throws Exception{
+
+		System.out.println("json/updatePurchaseView");
+		//Business Logic
+		Map<String , Object> purchase = purchaseService.findPurchase(tranNo);
+	
+		return purchase;
+	}
+	
+	@RequestMapping( value="json/updatePurchase", method=RequestMethod.POST )
+	public Map<String , Object> updatePurchase( @RequestBody Purchase purchase , HttpSession session) throws Exception{
+
+		System.out.println("json/updatePurchase");
+		//Business Logic
+
+		int tranNo = purchase.getTranNo();
+		int prodNo = purchase.getPurchaseProd().getProdNo();
+		
+		System.out.println("tranNo : "+tranNo);
+		System.out.println("prodNo : "+prodNo);
+		
+		purchaseService.updatePurchase(purchase, prodNo);
+		
+		Map<String , Object> result = purchaseService.findPurchase(tranNo);
+		
+		return result;
+	}
+	
 	@RequestMapping("json/listPurchase")
 	public Map<String , Object> listPurchase( @RequestBody Search search ,  @PathVariable String userId, HttpServletRequest request) throws Exception{
 		

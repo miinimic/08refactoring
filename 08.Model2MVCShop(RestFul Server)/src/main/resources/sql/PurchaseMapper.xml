@@ -115,14 +115,14 @@
 		UPDATE transaction
 		<set>
 			PAYMENT_OPTION = #{paymentOption},
-			RECEIVER_NAME = #{receiverName},
-			RECEIVER_PHONE = #{receiverPhone},
-			DEMAILADDR = #{divyAddr},
-			DLVY_REQUEST = #{divyRequest},
-			DLVY_DATE = #{divyDate},
-			item = #{item}		
+			RECEIVER_NAME = #{receiverName:VARCHAR},
+			RECEIVER_PHONE = #{receiverPhone:VARCHAR},
+			DEMAILADDR = #{divyAddr:VARCHAR},
+			DLVY_REQUEST = #{divyRequest:VARCHAR},
+			DLVY_DATE = #{divyDate:VARCHAR},
+			item = #{item:NUMERIC}		
 		</set>  
-		WHERE TRAN_NO = #{tranNo}
+		WHERE TRAN_NO = #{tranNo:NUMERIC}
 	 </update>
 	 
 	  <update 	id="updateReview"	parameterType="map">
