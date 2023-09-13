@@ -13,7 +13,7 @@ public interface PurchaseService {
 	public Map<String , Object> getPurchaseList(Search search, String buyerId) throws Exception;
 	
 	public Map<String , Object> findPurchase(int tranNo) throws Exception;
-		
+	
 	public void updatePurchase(Purchase purchase, int prodNo) throws Exception;
 	
 	public void updateTranCode( int tranNo, String tranCode) throws Exception;

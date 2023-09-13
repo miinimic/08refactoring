@@ -134,8 +134,6 @@ public class PurchaseDaoImpl implements PurchaseDao{
 		}
 
 		public void updatePurchase(Purchase purchase, int prodNo) throws Exception{
-			
-			System.out.println("updatePurchasedao");
 
 			int proItem = sqlSession.selectOne("PurchaseMapper.findProductItem", purchase.getTranNo());			
 			int tranItem = sqlSession.selectOne("PurchaseMapper.findPurchaseItem", purchase.getTranNo());	 
@@ -212,8 +210,6 @@ public class PurchaseDaoImpl implements PurchaseDao{
 		}
 		
 		public void updateProductItem(int item, int prodNo) throws Exception{
-			
-			System.out.println("updatePurcahseDao");
 			
 			Map<String , Object>  map = new HashMap<String, Object>();
 			
