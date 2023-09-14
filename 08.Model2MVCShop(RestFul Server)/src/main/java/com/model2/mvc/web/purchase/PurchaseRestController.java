@@ -70,6 +70,21 @@ public class PurchaseRestController {
 	
 	}
 	
+	@RequestMapping( value="json/updateReview/{tranNo}/{review}", method=RequestMethod.GET )
+	public String updateReview( @PathVariable int tranNo, @PathVariable String review) throws Exception{
+
+		System.out.println("json/updateReview");
+		//Business Logic
+
+		System.out.println(review+"review");
+		System.out.println(tranNo+"tranNo");
+
+		purchaseService.updateReview(tranNo, review);
+		
+		
+		return "update 완료";
+	}
+	
 	@RequestMapping( value="json/updatePurchaseView/{tranNo}", method=RequestMethod.GET )
 	public Map<String , Object> updatePurchaseView( @PathVariable int tranNo ) throws Exception{
 
@@ -197,15 +212,15 @@ public class PurchaseRestController {
 		return result;
 	}
 	
-	@RequestMapping(value="json/addPurchase", method=RequestMethod.POST)
-	public Purchase addPurchase(@RequestBody Purchase purchase, HttpServletRequest request) throws Exception {
-
+	@RequestMapping( value="json/addPurchase", method=RequestMethod.POST)
+	public String addPurchase(@RequestBody Purchase purchase ) throws Exception {
+		
 		System.out.println("json/addPurchase");
-		System.out.println(purchase+" : purchase!!");
-
+		
 		purchaseService.insertPurchase(purchase);
-					
-		return purchase;
+		
+		return "add완료";
+		
 	}
 	
 	@RequestMapping( value="json/updateReviewView/{tranNo}", method=RequestMethod.GET )

@@ -45,7 +45,6 @@
 					#{tranCode:CHAR},
 					SYSDATE,
 					#{divyDate:VARCHAR},
-					#{reviewCode:NUMERIC},
 					#{review:VARCHAR},
 					#{item:NUMERIC} )
 	</insert>
